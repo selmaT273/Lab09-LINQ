@@ -48,5 +48,21 @@ namespace LINQ_Tests
                    
         }
 
+        [Fact]
+        public void FilterAllNeighborhoodsWithoutNamesTest()
+        {
+            string filename = "data.json";
+            string data = File.ReadAllText(filename);
+
+            RootObject geojson = JsonConvert.DeserializeObject<RootObject>(data);
+
+            IEnumerable<string> allNeighborhoodsWithNames =
+                geojson.features
+                   .Where(feature => !feature.properties.neighborhood.Equals(""))
+                   .Select(feature => feature.properties.neighborhood);
+
+            Assert.Equal(143, allNeighborhoodsWithNames.Count());
+        }
+
     }
 }
