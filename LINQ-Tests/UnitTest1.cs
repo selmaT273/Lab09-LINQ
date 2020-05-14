@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -30,5 +31,22 @@ namespace LINQ_Tests
 
             Assert.Equal(147, geojson.features.Count());
         }
+
+        [Fact]
+        public void OutputAllNeighborhoodsTest()
+        {
+            string filename = "data.json";
+            string data = File.ReadAllText(filename);
+
+            RootObject geojson = JsonConvert.DeserializeObject<RootObject>(data);
+
+            IEnumerable<string> allNeighborhoods =
+                geojson.features
+                   .Select(feature => feature.properties.neighborhood);
+
+            Assert.Equal(147, allNeighborhoods.Count());
+                   
+        }
+
     }
 }
