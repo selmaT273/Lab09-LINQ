@@ -74,12 +74,32 @@ namespace LINQ_Tests
 
             IEnumerable<string> distinctNeighborhoods =
                 geojson.features
+                   .Where(feature => !feature.properties.neighborhood.Equals(""))
                    .Select(feature => feature.properties.neighborhood)
                    .Distinct();
                     
-            // Documentation error, there should be 40 distinct neighborhoods
-            Assert.Equal(40, distinctNeighborhoods.Count());
+            Assert.Equal(39, distinctNeighborhoods.Count());
         }
+
+        [Fact]
+        public void UsingQuerySyntaxTest()
+        {
+            string filename = "data.json";
+            string data = File.ReadAllText(filename);
+
+            RootObject geojson = JsonConvert.DeserializeObject<RootObject>(data);
+
+            IEnumerable<string> distinctNeighborhoods =
+                (from feature in geojson.features
+                 where !feature.properties.neighborhood.Equals("")
+                 select feature.properties.neighborhood).Distinct();
+                
+
+            Assert.Equal(39, distinctNeighborhoods.Count());
+        }
+
+
+
 
     }
 }
