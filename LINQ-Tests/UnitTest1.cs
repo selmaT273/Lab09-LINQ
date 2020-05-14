@@ -64,5 +64,22 @@ namespace LINQ_Tests
             Assert.Equal(143, allNeighborhoodsWithNames.Count());
         }
 
+        [Fact]
+        public void RemoveAllDuplicatesTest()
+        {
+            string filename = "data.json";
+            string data = File.ReadAllText(filename);
+
+            RootObject geojson = JsonConvert.DeserializeObject<RootObject>(data);
+
+            IEnumerable<string> distinctNeighborhoods =
+                geojson.features
+                   .Select(feature => feature.properties.neighborhood)
+                   .Distinct();
+                    
+            // Documentation error, there should be 40 distinct neighborhoods
+            Assert.Equal(40, distinctNeighborhoods.Count());
+        }
+
     }
 }
